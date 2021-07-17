@@ -1,0 +1,107 @@
+# 1.先分割出单词,再逐个翻转(双指针)(使用额外空间)
+基本过程:
+- 先遍历一遍原字符串，遇到非空格字符，则加入中间字符串`string tmp`；遇到空格符，则将`string tmp`加入`vector<string> words`
+- 第二次遍历字符串数组，将每个单词逆序存入答案数组，并在期间加上空格符
+```C++ []
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        int n = s.length();
+        vector<string> words; //用于存放单词
+        string tmp;           //用于获取单词
+        for (int i = 0; i < n; i++)
+        {
+            char c = s[i];
+            if (c != ' ')
+                tmp.push_back(c); //将该字母存入
+            else                  //遇到非空格字符则说明该个单词已结束
+            //注意:若以该条件判断，因为原string末尾没有字符，因此循环结束后最后一个单词没有存入数组
+            {
+                words.push_back(tmp); //将该个单词存入数组
+                tmp.clear();          //中间储存字串清空
+            }
+        }
+        words.push_back(tmp); //将最后一个单词存入数组
+        string ans;
+        for (int i = 0; i < words.size(); i++)
+        { //将每个单词翻转
+            int len = words[i].length();
+            for (int j = len - 1; j >= 0; j--)
+                ans.push_back(words[i][j]);
+            ans.push_back(' ');
+        }
+        ans.pop_back(); //删除多出来的最后一个空格
+        return ans;
+    }
+};
+```
+- 时间复杂度: O(2*N),第一次遍历将每个单词取出，第二次遍历将每个单词翻转并存入答案字符串
+- 空间复杂度: O(2*N),n为原字符串长度，储存单词用到`vector<string>`,答案字串用到`string`
+
+## 优化(省去存放单词的数组)
+```C++ []
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        string ans;
+        int n = s.size();
+        int i = 0;
+        while (i < n)
+        {
+            int start = i;
+            while (i < n && s[i] != ' ')
+                i++;
+            for (int j = i - 1; j >= start; j--)
+                ans.push_back(s[j]);
+            while (i < n && s[i] == ' ')
+            {
+                i++;
+                ans.push_back(' ');
+            }
+        }
+        return ans;
+    }
+};
+```
+- 时间复杂度: O(n),遍历一次数组，n为原数组长度
+- 空间复杂度: O(N),额外使用等长数组存放答案，n为原数组长度
+
+
+***
+
+# 2.原地操作(双指针)
+由方法1改变而来，将上述优化代码中的for循环改为用于翻转单词的while循环即可(双指针实现翻转)，详情见代码
+```C++ []
+class Solution
+{
+public:
+    string reverseWords(string s)
+    {
+        int n = s.size();
+        int i = 0;
+        while (i < n)
+        {
+            int start = i;//每个子字符串的起始下标
+            while (i < n && s[i] != ' ')
+                i++;
+            int end = i - 1;//每个子字符串的结束下标
+            while (start < end)
+            {
+                swap(s[start], s[end]);//不断头尾交换以实现翻转
+                start++;
+                end--;
+            }
+            while (i < n && s[i] == ' ')
+                i++;
+        }
+        return s;
+    }
+};
+```
+
+- 时间复杂度: O(N)，每个字符要么在O(1)时间内完成交换，要么原地不动
+- 空间复杂度: O(1),常数空间开销存放若干变量，不需额外字符数组
