@@ -1,4 +1,4 @@
-# Leetcode-CN
+# Intro-CN
 个人leetcode刷题题解  
 主要实现语言: `C++` `Python3`  
 有错误欢迎指正  
@@ -8,7 +8,7 @@
 - E-Mail: 1902447837@qq.com
 
 
-# Leetcode-EN
+# Intro-EN
 Personal problem solving set on leetcode  
 Main implementation language:`C++``Python3`  
 Welcome to point out mistakes  
